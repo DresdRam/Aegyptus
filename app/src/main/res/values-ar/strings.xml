@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ايجيبتوس</string>
+    <string name="welcome_to_aegyptus">اهلا بك في ايجيبتوس</string>
+    <string name="explore_egypt">استكشف مصر الان</string>
+    <string name="discover_wonders">اكتشف جميع روائع مصر</string>
+</resources>
