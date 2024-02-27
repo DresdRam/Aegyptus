@@ -8,6 +8,7 @@ object PreferenceHelper {
     private const val PREFERENCE_NAME = "AEGYPTUS"
 
     private const val AUTH_TOKEN = "AUTH_TOKEN"
+    private const val BASE_URL = "BASE_URL"
 
     fun getPreference(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -25,4 +26,13 @@ object PreferenceHelper {
                 it.putString(AUTH_TOKEN, value)
             }
         }
+
+    var SharedPreferences.baseUrl
+        get() = getString(BASE_URL, "https://aegyptus-api.onrender.com/")!!
+        set(value) {
+            edit {
+                it.putString(BASE_URL, value)
+            }
+        }
+
 }

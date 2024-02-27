@@ -19,12 +19,14 @@ import sq.mayv.aegyptus.util.OnboardingPage
 
 @Composable
 fun PagerScreen(onboardingPage: OnboardingPage) {
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
         LottieAnimationView(
             modifier = Modifier
                 .fillMaxWidth(0.75f)
@@ -32,7 +34,7 @@ fun PagerScreen(onboardingPage: OnboardingPage) {
             lottie = onboardingPage.lottie
         )
 
-        WelcomeText(
+        WelcomeTitleText(
             modifier = Modifier
                 .fillMaxWidth(),
             text = onboardingPage.header,
@@ -52,5 +54,6 @@ fun PagerScreen(onboardingPage: OnboardingPage) {
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center
         )
+
     }
 }

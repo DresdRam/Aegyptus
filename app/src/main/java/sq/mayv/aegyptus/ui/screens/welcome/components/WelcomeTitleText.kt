@@ -1,6 +1,6 @@
 package sq.mayv.aegyptus.ui.screens.welcome.components
 
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
 
 @Composable
-fun WelcomeText(
+fun WelcomeTitleText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.White,

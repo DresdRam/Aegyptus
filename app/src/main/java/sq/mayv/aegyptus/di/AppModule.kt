@@ -11,7 +11,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import sq.mayv.aegyptus.repository.AuthRepository
 import sq.mayv.aegyptus.util.PreferenceHelper
+import sq.mayv.aegyptus.util.PreferenceHelper.baseUrl
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -21,20 +23,26 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
+    fun provideAuthRepository(api: Api) = AuthRepository(api)
+
+    @Provides
     fun providePreferences(@ApplicationContext context: Context): SharedPreferences {
         return PreferenceHelper.getPreference(context)
     }
 
     @Singleton
     @Provides
-    fun provideApi(): Api {
+    fun provideApi(preferences: SharedPreferences): Api {
+
+        val baseUrl = preferences.baseUrl
+
         val client = OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.MINUTES).build()
 
         return Retrofit.Builder()
-            .baseUrl("BASE_URL")
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

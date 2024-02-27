@@ -1,18 +1,19 @@
 package sq.mayv.aegyptus.ui.navigation
 
-import java.lang.IllegalArgumentException
-
 enum class AppScreens {
     Auth,
-    Home,
+    Main,
     WelcomeScreen,
     HomeScreen,
-    LoginScreen;
+    MainScreen,
+    SignInScreen,
+    SignUpScreen,
+    RecoverPasswordScreen;
 
     companion object {
         fun fromRoute(route: String): AppScreens
         = when(route.substringBefore('/')){
-            LoginScreen.name -> LoginScreen
+            SignInScreen.name -> SignInScreen
             HomeScreen.name -> HomeScreen
             WelcomeScreen.name -> WelcomeScreen
             else -> throw IllegalArgumentException("Route $route is not Recognised.")

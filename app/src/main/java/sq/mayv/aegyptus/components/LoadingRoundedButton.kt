@@ -1,5 +1,7 @@
 package sq.mayv.aegyptus.components
 
+import androidx.annotation.RawRes
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonColors
@@ -14,14 +16,16 @@ import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
 
 @Composable
-fun RoundedButton(
+fun LoadingRoundedButton(
     modifier: Modifier = Modifier,
     text: String,
+    @RawRes lottie: Int = R.raw.ankh_loading_white,
     fontSize: Int = 22,
     colors: ButtonColors = ButtonDefaults.buttonColors(
         backgroundColor = colorResource(id = R.color.primary),
         contentColor = Color.White
     ),
+    isLoading: Boolean = false,
     onClicked: () -> Unit
 ) {
     Button(
@@ -30,9 +34,18 @@ fun RoundedButton(
         shape = RoundedCornerShape(10.dp),
         onClick = { onClicked() }
     ) {
-        Text(
-            text = text,
-            fontSize = fontSize.sp
-        )
+
+        if(isLoading) {
+            LottieAnimationView(
+                modifier = Modifier.size(40.dp),
+                lottie = lottie
+            )
+        }
+        else {
+            Text(
+                text = text,
+                fontSize = fontSize.sp
+            )
+        }
     }
 }
