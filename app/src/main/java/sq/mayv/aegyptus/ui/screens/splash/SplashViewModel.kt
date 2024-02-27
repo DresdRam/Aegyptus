@@ -1,7 +1,6 @@
 package sq.mayv.aegyptus.ui.screens.splash
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +21,8 @@ class SplashViewModel @Inject constructor(preferences: SharedPreferences) : View
     val startDestination: State<String> = _startDestination
 
     init {
-        if (preferences.token != "") {
-            _startDestination.value = AppScreens.Home.name
+        if (preferences.token.isNotEmpty()) {
+            _startDestination.value = AppScreens.Main.name
         }
 
         _isLoading.value = false
