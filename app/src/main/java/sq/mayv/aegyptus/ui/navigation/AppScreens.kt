@@ -14,6 +14,7 @@ enum class AppScreens {
         fun fromRoute(route: String): AppScreens
         = when(route.substringBefore('/')){
             SignInScreen.name -> SignInScreen
+            SignUpScreen.name -> SignUpScreen
             HomeScreen.name -> HomeScreen
             WelcomeScreen.name -> WelcomeScreen
             else -> throw IllegalArgumentException("Route $route is not Recognised.")

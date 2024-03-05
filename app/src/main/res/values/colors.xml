@@ -11,4 +11,5 @@
     <color name="gold">#FFF3994A</color>
     <color name="orange">#FFE76D3C</color>
     <color name="blue_clickable_text">#FF6D8DBA</color>
+    <color name="description">#FF969590</color>
 </resources>

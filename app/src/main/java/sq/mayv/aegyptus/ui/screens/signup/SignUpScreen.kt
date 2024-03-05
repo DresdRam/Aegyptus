@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import sq.mayv.aegyptus.R
 import sq.mayv.aegyptus.components.PasswordTextInputField
 import sq.mayv.aegyptus.components.TextInputField
@@ -41,6 +44,7 @@ fun SignUpScreen(
     navController: NavController,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
 
     var name by remember { mutableStateOf("") }
     var nameMessage by remember { mutableStateOf("Please enter your name") }
@@ -60,8 +64,11 @@ fun SignUpScreen(
 
     val data by viewModel.signUpData.collectAsState()
 
+    var signInClicked by remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = data.statusCode) {
         if (viewModel.isSignUpSuccessful) {
+            navController.popBackStack()
             navController.navigate(AppScreens.Main.name)
         }
     }
@@ -71,53 +78,64 @@ fun SignUpScreen(
         topBar = {
             TopBarTitleArrow(
                 navController = navController,
-                title = "Signup",
+                title = "Sign Up",
             )
         },
         bottomBar = {
             SignupBottomBar(
                 isLoading = viewModel.isSignUpLoading,
                 onSignUpClick = {
-                    if (!viewModel.isSignUpLoading) {
-                        if (name.isNotEmpty() || email.isNotEmpty() || password.isNotEmpty() || confirmPassword.isNotEmpty()) {
-                            if (!isEmailValid(email) || !isPasswordValid(password)) {
-                                if (!isEmailValid(email)) {
-                                    emailMessage = "The email you entered is not valid"
-                                    emailMessageVisibility = true
-                                }
-                                if (!isPasswordValid(password)) {
-                                    passwordMessage =
-                                        "Must have at least one uppercase character.\nMust have at least one number.\nMust be at least 8 characters."
-                                    passwordMessageVisibility = true
+                    coroutineScope.launch(Dispatchers.IO) {
+                        if (!viewModel.isSignUpLoading) {
+                            if (name.isNotEmpty() || email.isNotEmpty() || password.isNotEmpty() || confirmPassword.isNotEmpty()) {
+                                if (!isEmailValid(email) || !isPasswordValid(password)) {
+                                    if (!isEmailValid(email)) {
+                                        emailMessage = "The email you entered is not valid"
+                                        emailMessageVisibility = true
+                                    }
+                                    if (!isPasswordValid(password)) {
+                                        passwordMessage =
+                                            "Must have at least one uppercase character.\nMust have at least one number.\nMust be at least 8 characters."
+                                        passwordMessageVisibility = true
+                                    }
+                                } else {
+                                    if (password != confirmPassword) {
+                                        confirmPasswordMessage = "Passwords do not match"
+                                        confirmPasswordMessageVisibility = true
+                                    } else {
+                                        val body =
+                                            SignUpDto(
+                                                name = name,
+                                                email = email,
+                                                password = password
+                                            )
+                                        viewModel.signUp(body = body)
+                                    }
                                 }
                             } else {
-                                if(password != confirmPassword) {
-                                    confirmPasswordMessage = "Passwords do not match"
-                                    confirmPasswordMessageVisibility = true
-                                } else {
-                                    val body =
-                                        SignUpDto(name = name, email = email, password = password)
-                                    viewModel.signUp(body = body)
+                                if (name.isEmpty()) {
+                                    nameMessageVisibility = true
                                 }
-                            }
-                        } else {
-                            if (name.isEmpty()) {
-                                nameMessageVisibility = true
-                            }
-                            if (email.isEmpty()) {
-                                emailMessageVisibility = true
-                            }
-                            if (password.isEmpty()) {
-                                passwordMessageVisibility = true
-                            }
-                            if (confirmPassword.isEmpty()) {
-                                confirmPasswordMessageVisibility = true
+                                if (email.isEmpty()) {
+                                    emailMessageVisibility = true
+                                }
+                                if (password.isEmpty()) {
+                                    passwordMessageVisibility = true
+                                }
+                                if (confirmPassword.isEmpty()) {
+                                    confirmPasswordMessageVisibility = true
+                                }
                             }
                         }
                     }
                 },
                 onLoginNowClick = {
-                    navController.popBackStack()
+                    if (!viewModel.isSignUpLoading) {
+                        if (!signInClicked) {
+                            signInClicked = true
+                            navController.popBackStack()
+                        }
+                    }
                 }
             )
         }
@@ -140,7 +158,9 @@ fun SignUpScreen(
                 value = name,
                 onValueChange = { value ->
                     name = value
-                    nameMessageVisibility = value == ""
+                    if (nameMessage.isNotEmpty()) {
+                        nameMessageVisibility = value == ""
+                    }
                 },
                 label = "Name",
                 message = nameMessage,
@@ -161,7 +181,9 @@ fun SignUpScreen(
                 value = email,
                 onValueChange = { value ->
                     email = value
-                    emailMessageVisibility = value == ""
+                    if (emailMessage.isNotEmpty()) {
+                        emailMessageVisibility = value == ""
+                    }
                 },
                 label = "Email",
                 message = emailMessage,
@@ -182,7 +204,9 @@ fun SignUpScreen(
                 value = password,
                 onValueChange = { value ->
                     password = value
-                    passwordMessageVisibility = value == ""
+                    if (passwordMessage.isNotEmpty()) {
+                        passwordMessageVisibility = value == ""
+                    }
                 },
                 label = "Password",
                 message = passwordMessage,
@@ -199,7 +223,9 @@ fun SignUpScreen(
                 value = confirmPassword,
                 onValueChange = { value ->
                     confirmPassword = value
-                    confirmPasswordMessageVisibility = value == ""
+                    if (confirmPasswordMessage.isNotEmpty()) {
+                        confirmPasswordMessageVisibility = value == ""
+                    }
                 },
                 label = "Confirm Password",
                 message = confirmPasswordMessage,

@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import sq.mayv.aegyptus.R
 import sq.mayv.aegyptus.components.PasswordTextInputField
 import sq.mayv.aegyptus.components.TextInputField
@@ -41,6 +44,8 @@ fun SignInScreen(
     navController: NavController,
     viewModel: SignInViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     var email by remember { mutableStateOf("test@test.com") }
     var password by remember { mutableStateOf("test123") }
 
@@ -52,8 +57,11 @@ fun SignInScreen(
 
     val data = viewModel.signInData.collectAsState().value
 
+    var signUpClicked by remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = data.statusCode) {
         if (viewModel.isSignInSuccessful) {
+            navController.popBackStack()
             navController.navigate(AppScreens.Main.name)
         }
     }
@@ -63,7 +71,7 @@ fun SignInScreen(
         topBar = {
             TopBarTitleArrow(
                 navController = navController,
-                title = "Login",
+                title = "Sign In",
                 backArrowEnabled = false
             )
         },
@@ -71,24 +79,31 @@ fun SignInScreen(
             LoginBottomBar(
                 isLoading = viewModel.isSignInLoading,
                 onSignInClick = {
-                    if (!viewModel.isSignInLoading) {
-                        if (email.isNotEmpty() || password.isNotEmpty()) {
-                            val body = SignInDto(email = email, password = password)
-                            viewModel.signIn(body = body)
-                        } else {
-                            if (email.isEmpty()) {
-                                emailMessage = "Please enter the email."
-                                emailMessageVisibility = true
-                            }
-                            if (password.isEmpty()) {
-                                passwordMessage = "Please enter the password."
-                                passwordMessageVisibility = true
+                    coroutineScope.launch(Dispatchers.IO) {
+                        if (!viewModel.isSignInLoading) {
+                            if (email.isNotEmpty() || password.isNotEmpty()) {
+                                val body = SignInDto(email = email, password = password)
+                                viewModel.signIn(body = body)
+                            } else {
+                                if (email.isEmpty()) {
+                                    emailMessage = "Please enter the email."
+                                    emailMessageVisibility = true
+                                }
+                                if (password.isEmpty()) {
+                                    passwordMessage = "Please enter the password."
+                                    passwordMessageVisibility = true
+                                }
                             }
                         }
                     }
                 },
                 onSignUpClick = {
-                    navController.navigate(AppScreens.SignUpScreen.name)
+                    if (!viewModel.isSignInLoading) {
+                        if (!signUpClicked) {
+                            signUpClicked = true
+                            navController.navigate(AppScreens.SignUpScreen.name)
+                        }
+                    }
                 }
             )
         }
@@ -108,11 +123,13 @@ fun SignInScreen(
             TextInputField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 35.dp, vertical = 5.dp),
+                    .padding(horizontal = 35.dp, vertical = 15.dp),
                 value = email,
                 onValueChange = { value ->
                     email = value
-                    emailMessageVisibility = value == ""
+                    if (emailMessage.isNotEmpty()) {
+                        emailMessageVisibility = value == ""
+                    }
                 },
                 label = "Email",
                 message = emailMessage,
@@ -129,11 +146,13 @@ fun SignInScreen(
             PasswordTextInputField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 35.dp, vertical = 5.dp),
+                    .padding(horizontal = 35.dp, vertical = 15.dp),
                 value = password,
                 onValueChange = { value ->
                     password = value
-                    passwordMessageVisibility = value == ""
+                    if (passwordMessage.isNotEmpty()) {
+                        passwordMessageVisibility = value == ""
+                    }
                 },
                 label = "Password",
                 message = passwordMessage,
@@ -146,7 +165,7 @@ fun SignInScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 35.dp, top = 10.dp)
+                    .padding(end = 35.dp, top = 15.dp)
                     .clickable {
                         navController.navigate(AppScreens.RecoverPasswordScreen.name)
                     },

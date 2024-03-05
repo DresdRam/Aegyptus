@@ -7,9 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import sq.mayv.aegyptus.ui.screens.signin.SignInScreen
 import sq.mayv.aegyptus.ui.screens.main.MainScreen
 import sq.mayv.aegyptus.ui.screens.recover_password.RecoverPasswordScreen
+import sq.mayv.aegyptus.ui.screens.signin.SignInScreen
 import sq.mayv.aegyptus.ui.screens.signup.SignUpScreen
 import sq.mayv.aegyptus.ui.screens.welcome.WelcomeScreen
 
@@ -156,7 +156,7 @@ fun AppNavigation(startDestination: String = AppScreens.WelcomeScreen.name) {
                         animationSpec = tween(transitionSpeed)
                     )
                 }) {
-                MainScreen()
+                MainScreen(rootNavController = navigationController)
             }
         }
     }

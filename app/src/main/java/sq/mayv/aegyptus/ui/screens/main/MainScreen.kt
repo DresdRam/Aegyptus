@@ -3,6 +3,7 @@ package sq.mayv.aegyptus.ui.screens.main
 import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import sq.mayv.aegyptus.ui.screens.main.components.BottomNavigationBar
 import sq.mayv.aegyptus.ui.screens.main.components.MainNavigationHost
@@ -10,7 +11,7 @@ import sq.mayv.aegyptus.util.BottomNavItem
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(rootNavController: NavController) {
     val navController = rememberNavController()
 
     Scaffold(
@@ -26,7 +27,7 @@ fun MainScreen() {
             )
         }
     ) {
-        MainNavigationHost(navController)
+        MainNavigationHost(rootNavController = rootNavController, navController = navController)
     }
 
 }

@@ -1,7 +1,8 @@
 package sq.mayv.aegyptus.components
 
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import sq.mayv.aegyptus.R
 
@@ -19,7 +21,8 @@ import sq.mayv.aegyptus.R
 fun SearchTextField(
     search: String,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    onSearchClick: () -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -28,7 +31,7 @@ fun SearchTextField(
     ) {
 
         TextField(
-            singleLine= true,
+            singleLine = true,
             value = search,
             onValueChange = onValueChange,
             colors = TextFieldDefaults.textFieldColors(
@@ -47,7 +50,11 @@ fun SearchTextField(
                     contentDescription = ""
                 )
             },
-            placeholder = { Text(text = "Search") }
+            placeholder = { Text(text = "Search") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(
+                onSearch = { onSearchClick() }
+            )
         )
     }
 }
