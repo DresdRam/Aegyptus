@@ -53,6 +53,17 @@ android {
 
 dependencies {
 
+    // Glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
+    // OSM Maps SDK for Android
+    implementation("org.osmdroid:osmdroid-android:6.1.16")
+    // This library dependencies
+    implementation("tech.utsmankece:osm-android-compose:0.0.5")
+
+    //Huawei Map Kit
+    //implementation("com.huawei.hms:maps:5.2.0.301")
+
     // Splash Screen API
     implementation("androidx.core:core-splashscreen:1.0.1")
 

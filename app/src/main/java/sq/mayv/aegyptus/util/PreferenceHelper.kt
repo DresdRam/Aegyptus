@@ -9,6 +9,7 @@ object PreferenceHelper {
 
     private const val AUTH_TOKEN = "AUTH_TOKEN"
     private const val BASE_URL = "BASE_URL"
+    private const val FIRST_LAUNCH = "FIRST_LAUNCH"
 
     fun getPreference(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -32,6 +33,14 @@ object PreferenceHelper {
         set(value) {
             edit {
                 it.putString(BASE_URL, value)
+            }
+        }
+
+    var SharedPreferences.firstLaunch
+        get() = getBoolean(FIRST_LAUNCH, true)!!
+        set(value) {
+            edit {
+                it.putBoolean(FIRST_LAUNCH, value)
             }
         }
 

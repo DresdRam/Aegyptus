@@ -1,5 +1,6 @@
 package sq.mayv.aegyptus.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Column
@@ -26,10 +27,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
 
 @Composable
@@ -42,6 +46,7 @@ fun PasswordTextInputField(
     message: String = "",
     messageVisibility: Boolean = false
 ) {
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -68,15 +73,22 @@ fun PasswordTextInputField(
             ),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (passwordVisible) R.drawable.pharaoh_eye_opened else R.drawable.pharaoh_eye_closed
-                        ),
-                        tint = if (passwordVisible) colorResource(id = R.color.gold) else LocalContentColor.current.copy(
-                            alpha = LocalContentAlpha.current
-                        ),
-                        contentDescription = "Trailing Icon"
-                    )
+                    AnimatedContent(
+                        targetState = passwordVisible,
+                        label = "",
+                        contentAlignment = Alignment.Center
+                        ) {
+
+                        Icon(
+                            painter = painterResource(
+                                id = if (it) R.drawable.pharaoh_eye_opened else R.drawable.pharaoh_eye_closed
+                            ),
+                            tint = if (it) colorResource(id = R.color.gold) else LocalContentColor.current.copy(
+                                alpha = LocalContentAlpha.current
+                            ),
+                            contentDescription = "Trailing Icon"
+                        )
+                    }
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -84,13 +96,18 @@ fun PasswordTextInputField(
                 autoCorrect = false
             ),
             singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+            textStyle = TextStyle(
+                fontFamily = if (!passwordVisible) FontFamily(Font(R.font.yiroglyphics)) else FontFamily.Default,
+                fontSize = if(!passwordVisible) 20.sp else TextUnit.Unspecified
+            )
         )
 
         AnimatedVisibility(visible = messageVisibility) {
             Text(
                 text = message,
-                modifier = errorModifier.padding(top = 10.dp).alpha(alpha),
+                modifier = errorModifier
+                    .padding(top = 10.dp)
+                    .alpha(alpha),
                 color = colorResource(id = R.color.gold)
             )
         }

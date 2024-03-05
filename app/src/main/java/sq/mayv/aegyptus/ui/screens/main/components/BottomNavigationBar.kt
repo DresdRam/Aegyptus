@@ -47,9 +47,9 @@ fun BottomNavigationBar(navController: NavController, bottomNavItems: List<Botto
                 BottomNavigationItem(
                     selected = currentRoute == item.route,
                     onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
+                        if (currentRoute != item.route) {
+                            navController.popBackStack()
+                            navController.navigate(item.route)
                         }
                     },
                     icon = {

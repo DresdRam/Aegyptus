@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import sq.mayv.aegyptus.ui.navigation.AppScreens
+import sq.mayv.aegyptus.util.PreferenceHelper.firstLaunch
 import sq.mayv.aegyptus.util.PreferenceHelper.token
 import javax.inject.Inject
 
@@ -21,8 +22,14 @@ class SplashViewModel @Inject constructor(preferences: SharedPreferences) : View
     val startDestination: State<String> = _startDestination
 
     init {
-        if (preferences.token.isNotEmpty()) {
-            _startDestination.value = AppScreens.Main.name
+        if(!preferences.firstLaunch) {
+            if (preferences.token.isNotEmpty()) {
+                _startDestination.value = AppScreens.Main.name
+            } else {
+                _startDestination.value = AppScreens.Auth.name
+            }
+        } else {
+            preferences.firstLaunch = false
         }
 
         _isLoading.value = false
