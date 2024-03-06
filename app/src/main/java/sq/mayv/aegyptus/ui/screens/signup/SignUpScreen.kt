@@ -36,7 +36,7 @@ import sq.mayv.aegyptus.components.TextInputField
 import sq.mayv.aegyptus.components.TopBarTitleArrow
 import sq.mayv.aegyptus.dto.SignUpDto
 import sq.mayv.aegyptus.ui.navigation.AppScreens
-import sq.mayv.aegyptus.ui.screens.signin.components.SignupBottomBar
+import sq.mayv.aegyptus.ui.screens.signup.components.SignupBottomBar
 import java.util.regex.Pattern
 
 @Composable

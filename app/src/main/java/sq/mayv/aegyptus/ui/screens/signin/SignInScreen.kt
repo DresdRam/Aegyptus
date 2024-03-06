@@ -167,7 +167,9 @@ fun SignInScreen(
                     .fillMaxWidth()
                     .padding(end = 35.dp, top = 15.dp)
                     .clickable {
-                        navController.navigate(AppScreens.RecoverPasswordScreen.name)
+                        if (!viewModel.isSignInLoading) {
+                            navController.navigate(AppScreens.RecoverPasswordScreen.name)
+                        }
                     },
                 text = "Forgot your password?",
                 textAlign = TextAlign.End,
