@@ -1,4 +1,4 @@
-package sq.mayv.aegyptus.ui.screens.signin.components
+package sq.mayv.aegyptus.ui.screens.signup.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
