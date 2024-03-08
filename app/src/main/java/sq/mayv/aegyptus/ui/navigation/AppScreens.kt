@@ -4,6 +4,8 @@ enum class AppScreens {
     Auth,
     Main,
     WelcomeScreen,
+    PlaceScreen,
+    SearchScreen,
     HomeScreen,
     MainScreen,
     SignInScreen,

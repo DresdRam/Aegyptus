@@ -39,7 +39,7 @@ import sq.mayv.aegyptus.util.BottomNavItem
 @Composable
 fun MainNavigationHost(rootNavController: NavController, navController: NavHostController) {
     NavHost(navController = navController, startDestination = BottomNavItem.Home.route) {
-        composable(BottomNavItem.Home.route) { HomeScreen(navController = navController) }
+        composable(BottomNavItem.Home.route) { HomeScreen(rootNavController = rootNavController, navController = navController) }
         composable(BottomNavItem.Map.route) {
 
             val me =
@@ -101,7 +101,7 @@ fun MainNavigationHost(rootNavController: NavController, navController: NavHostC
             }
         }
         composable(BottomNavItem.Favorite.route) {
-            FavoritesScreen(navController = navController)
+            FavoritesScreen(rootNavController = rootNavController, navController = navController)
         }
         composable(BottomNavItem.Profile.route) {
             ProfileScreen(rootNavController = rootNavController, navController = navController)

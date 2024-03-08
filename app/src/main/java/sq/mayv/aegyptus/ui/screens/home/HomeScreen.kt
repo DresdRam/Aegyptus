@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sq.mayv.aegyptus.R
+import sq.mayv.aegyptus.components.LottieAnimationView
 import sq.mayv.aegyptus.components.SearchTextField
+import sq.mayv.aegyptus.ui.navigation.AppScreens
 import sq.mayv.aegyptus.ui.screens.home.components.CategoriesListShimmer
 import sq.mayv.aegyptus.ui.screens.home.components.CategoriesListView
 import sq.mayv.aegyptus.ui.screens.home.components.NearbyListShimmer
@@ -50,13 +54,14 @@ import sq.mayv.aegyptus.util.extension.shimmer
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltViewModel()) {
-    val coroutineScope = rememberCoroutineScope()
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel(),
+    rootNavController: NavController
+) {
 
     LaunchedEffect(key1 = true) {
-        coroutineScope.launch(Dispatchers.IO) {
-            viewModel.getNearbyPlaces()
-        }
+        viewModel.getNearbyPlaces()
     }
 
     val places by viewModel.placesData.collectAsState()
@@ -88,6 +93,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
             ) {
                 if (condition) {
                     var searchQuery by remember { mutableStateOf("") }
+                    var trailingIconVisibility by remember { mutableStateOf(false) }
 
                     SearchTextField(
                         modifier = Modifier
@@ -95,10 +101,24 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                             .padding(horizontal = 25.dp)
                             .fillMaxWidth(),
                         search = searchQuery,
+                        trailingIconVisibility = trailingIconVisibility,
                         onValueChange = { value ->
                             searchQuery = value
+                            if (searchQuery.isNotEmpty()) {
+                                if (!trailingIconVisibility) {
+                                    trailingIconVisibility = true
+                                }
+                            } else {
+                                trailingIconVisibility = false
+                            }
                         },
-                        onSearchClick = {  }
+                        onSearchClick = {
+                            rootNavController.navigate(AppScreens.SearchScreen.name.plus(searchQuery))
+                        },
+                        onTrailingIconClick = {
+                            searchQuery = ""
+                            trailingIconVisibility = false
+                        }
                     )
 
                     Text(
@@ -114,14 +134,15 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 
                     NearbyListView(
                         places = places.data ?: listOf(),
+                        onItemClick = {
+                            rootNavController.navigate(AppScreens.PlaceScreen.name.plus(it))
+                        },
                         onSaveClick = { id, isFavorite ->
-                            coroutineScope.launch(Dispatchers.IO) {
-                                if (!viewModel.isAddingFavorite && !viewModel.isRemovingFavorite) {
-                                    if (!isFavorite) {
-                                        viewModel.addToFavorites(id)
-                                    } else {
-                                        viewModel.removeFromFavorites(id)
-                                    }
+                            if (!viewModel.isAddingFavorite && !viewModel.isRemovingFavorite) {
+                                if (!isFavorite) {
+                                    viewModel.addToFavorites(id)
+                                } else {
+                                    viewModel.removeFromFavorites(id)
                                 }
                             }
                         }
@@ -180,6 +201,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                     )
 
                     CategoriesListShimmer()
+
                 }
             }
         }

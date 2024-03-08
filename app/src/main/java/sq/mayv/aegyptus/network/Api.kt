@@ -15,9 +15,10 @@ import sq.mayv.aegyptus.model.Place
 
 interface Api {
 
-    @GET("place/get-place")
+    @GET("place/get-one")
     suspend fun getPlaceInfo(
-        @Query("id") id: Int
+        @Query("id") id: Int,
+        @Header("Authorization") authToken: String
     ): Response<Place>
 
     @GET("favorite/get-all")

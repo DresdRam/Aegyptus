@@ -40,7 +40,7 @@ fun TopBarTitleArrow(
                 onClick = { navController.popBackStack() }
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_back),
+                    painter = painterResource(id = R.drawable.ic_back_arrow),
                     contentDescription = "Back Arrow Icon"
                 )
             }

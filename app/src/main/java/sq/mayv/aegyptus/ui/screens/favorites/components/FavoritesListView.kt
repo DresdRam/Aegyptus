@@ -10,13 +10,19 @@ import androidx.compose.ui.unit.dp
 import sq.mayv.aegyptus.model.Place
 
 @Composable
-fun FavoritesListView(favorites: List<Place>) {
+fun FavoritesListView(
+    favorites: List<Place>,
+    onItemClick: (Int) -> Unit
+) {
     LazyColumn(
         modifier = Modifier.padding(top = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
+        verticalArrangement = Arrangement.spacedBy(15.dp),
     ) {
         items(favorites, key = { it.id }) { favorite ->
-            FavoritesListItem(favorite)
+            FavoritesListItem(
+                favorite = favorite,
+                onItemClick = { onItemClick(it) }
+            )
         }
     }
 }

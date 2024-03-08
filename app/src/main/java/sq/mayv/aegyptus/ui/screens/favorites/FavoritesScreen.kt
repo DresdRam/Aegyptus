@@ -20,11 +20,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sq.mayv.aegyptus.ui.navigation.AppScreens
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListShimmer
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListView
 
 @Composable
-fun FavoritesScreen(navController: NavController, viewModel: FavoritesViewModel = hiltViewModel()) {
+fun FavoritesScreen(
+    navController: NavController,
+    viewModel: FavoritesViewModel = hiltViewModel(),
+    rootNavController: NavController
+) {
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -54,7 +59,10 @@ fun FavoritesScreen(navController: NavController, viewModel: FavoritesViewModel 
             }
         ) { condition ->
             if (condition) {
-                FavoritesListView(favorites = favorites.data ?: listOf())
+                FavoritesListView(
+                    favorites = favorites.data ?: listOf(),
+                    onItemClick = { rootNavController.navigate(AppScreens.PlaceScreen.name.plus(it)) }
+                )
 
             } else {
                 FavoritesListShimmer()

@@ -53,6 +53,9 @@ android {
 
 dependencies {
 
+    // Accompanist Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
+
     // Glide
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 

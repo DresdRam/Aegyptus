@@ -5,6 +5,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -13,16 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
 
 @Composable
 fun SearchTextField(
     search: String,
     modifier: Modifier = Modifier,
+    trailingIconVisibility: Boolean,
     onValueChange: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onTrailingIconClick: () -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -49,6 +55,17 @@ fun SearchTextField(
                     painter = painterResource(id = R.drawable.ic_search),
                     contentDescription = ""
                 )
+            },
+            trailingIcon = {
+                if (trailingIconVisibility) {
+                    IconButton(onClick = { onTrailingIconClick() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_cancel),
+                            contentDescription = "",
+                            tint = colorResource(id = R.color.description)
+                        )
+                    }
+                }
             },
             placeholder = { Text(text = "Search") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),

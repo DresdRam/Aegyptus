@@ -4,6 +4,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,7 +43,10 @@ import sq.mayv.aegyptus.model.Place
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun FavoritesListItem(favorite: Place) {
+fun FavoritesListItem(
+    favorite: Place,
+    onItemClick: (Int) -> Unit
+) {
 
     val images = favorite.images.split('|')
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { images.size })
@@ -51,7 +55,10 @@ fun FavoritesListItem(favorite: Place) {
         modifier = Modifier
             .padding(horizontal = 15.dp)
             .fillMaxWidth()
-            .height(150.dp),
+            .height(150.dp)
+            .clickable {
+                       onItemClick(favorite.id)
+            },
     ) {
 
         Card(
