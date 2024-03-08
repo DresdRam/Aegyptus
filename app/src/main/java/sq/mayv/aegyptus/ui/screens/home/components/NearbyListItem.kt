@@ -1,5 +1,6 @@
 package sq.mayv.aegyptus.ui.screens.home.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,7 +36,11 @@ import sq.mayv.aegyptus.model.Place
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun NearbyListItem(place: Place, onSaveClick: (Int, Boolean) -> Unit) {
+fun NearbyListItem(
+    place: Place,
+    onItemClick: (Int) -> Unit,
+    onSaveClick: (Int, Boolean) -> Unit
+) {
 
     var isFavorite by remember { mutableStateOf(place.isFavorite) }
 
@@ -43,7 +48,10 @@ fun NearbyListItem(place: Place, onSaveClick: (Int, Boolean) -> Unit) {
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .width(230.dp)
-            .height(190.dp),
+            .height(190.dp)
+            .clickable {
+                onItemClick(place.id)
+            },
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White

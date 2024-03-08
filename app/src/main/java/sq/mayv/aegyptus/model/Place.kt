@@ -9,6 +9,7 @@ data class Place(
     val address: String = "",
     val coordinates: String = "",
     val governorate: Governorate = Governorate(),
+    val category: Category = Category(),
     val location: String = "",
     val ticket: String = "",
     val time: String = "",
