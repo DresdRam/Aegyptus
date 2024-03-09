@@ -27,12 +27,14 @@ class FavoritesViewModel @Inject constructor(
 
     private val _favoritesData = MutableStateFlow(Resource<List<Place>>())
     val favoritesData: StateFlow<Resource<List<Place>>> = _favoritesData
-    var isFavoritesLoading by mutableStateOf(false)
+    var isFavoritesLoading by mutableStateOf(true)
     var isSuccessful by mutableStateOf(false)
 
     fun getAllFavorites() {
         viewModelScope.launch(Dispatchers.IO) {
-            isFavoritesLoading = true
+            if(!isFavoritesLoading) {
+                isFavoritesLoading = true
+            }
 
             _favoritesData.value =
                 favoritesRepository.getAllFavorites(preferences.token)

@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
 
     private val _placesData = MutableStateFlow(Resource<List<Place>>())
     val placesData: StateFlow<Resource<List<Place>>> = _placesData
-    var isPlacesLoading by mutableStateOf(false)
+    var isPlacesLoading by mutableStateOf(true)
     var isSuccessful by mutableStateOf(false)
 
     var isAddingFavorite by mutableStateOf(false)
@@ -40,7 +40,9 @@ class HomeViewModel @Inject constructor(
 
     fun getNearbyPlaces() {
         viewModelScope.launch(Dispatchers.IO) {
-            isPlacesLoading = true
+            if(!isPlacesLoading) {
+                isPlacesLoading = true
+            }
 
             _placesData.value =
                 placesRepository.getNearbyPlaces(Coordinates(1.10, 11.110), preferences.token)

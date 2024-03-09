@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,6 +23,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import sq.mayv.aegyptus.ui.navigation.AppScreens
+import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesErrorView
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListShimmer
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListView
 
@@ -46,7 +49,7 @@ fun FavoritesScreen(
         color = Color.White
     ) {
         AnimatedContent(
-            targetState = !viewModel.isFavoritesLoading && viewModel.isSuccessful,
+            targetState = viewModel.isFavoritesLoading,
             label = "",
             transitionSpec = {
                 fadeIn(
@@ -57,15 +60,44 @@ fun FavoritesScreen(
                     )
                 )
             }
-        ) { condition ->
-            if (condition) {
-                FavoritesListView(
-                    favorites = favorites.data ?: listOf(),
-                    onItemClick = { rootNavController.navigate(AppScreens.PlaceScreen.name.plus(it)) }
-                )
+        ) { isLoading ->
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            } else {
-                FavoritesListShimmer()
+                if (isLoading) {
+                    FavoritesListShimmer()
+                } else {
+                    AnimatedContent(
+                        targetState = viewModel.isSuccessful,
+                        label = "",
+                        transitionSpec = {
+                            fadeIn(
+                                animationSpec = tween(600, easing = EaseIn)
+                            ).togetherWith(
+                                fadeOut(
+                                    animationSpec = tween(600, easing = EaseOut)
+                                )
+                            )
+                        }
+                    ) { isSuccessful ->
+                        if (isSuccessful) {
+                            FavoritesListView(
+                                favorites = favorites.data ?: listOf(),
+                                onItemClick = {
+                                    rootNavController.navigate(
+                                        AppScreens.PlaceScreen.name.plus(
+                                            it
+                                        )
+                                    )
+                                }
+                            )
+                        } else {
+                            FavoritesErrorView()
+                        }
+                    }
+                }
             }
         }
     }
