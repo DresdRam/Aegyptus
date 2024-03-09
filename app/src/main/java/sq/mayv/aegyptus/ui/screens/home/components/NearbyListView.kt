@@ -18,7 +18,8 @@ fun NearbyListView(
                 onItemClick = { onItemClick(it) },
                 onSaveClick = { id, isFavorite ->
                     onSaveClick(id, isFavorite)
-                })
+                }
+            )
         }
     }
 }

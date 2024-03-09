@@ -45,7 +45,7 @@ object AppModule {
         val baseUrl = preferences.baseUrl
 
         val client = OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.MINUTES).build()
 

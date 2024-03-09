@@ -1,4 +1,4 @@
-package sq.mayv.aegyptus
+package sq.mayv.aegyptus.ui.screens.main
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
