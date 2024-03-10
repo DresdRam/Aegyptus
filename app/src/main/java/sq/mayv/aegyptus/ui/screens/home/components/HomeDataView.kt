@@ -27,7 +27,8 @@ import sq.mayv.aegyptus.util.CategoryItem
 
 @Composable
 fun HomeDataView(
-    places: List<Place>?,
+    nearby: List<Place>?,
+    mostVisited: List<Place>?,
     rootNavController: NavController,
     viewModel: HomeViewModel,
 ) {
@@ -79,8 +80,35 @@ fun HomeDataView(
         )
 
 
-        NearbyListView(
-            places = places ?: listOf(),
+        HomePlacesListView(
+            places = nearby ?: listOf(),
+            onItemClick = {
+                rootNavController.navigate(AppScreens.PlaceScreen.name.plus(it))
+            },
+            onSaveClick = { id, isFavorite ->
+                if (!viewModel.isAddingFavorite && !viewModel.isRemovingFavorite) {
+                    if (!isFavorite) {
+                        viewModel.addToFavorites(id)
+                    } else {
+                        viewModel.removeFromFavorites(id)
+                    }
+                }
+            }
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .padding(horizontal = 15.dp),
+            text = "Most Visited",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+        )
+
+
+        HomePlacesListView(
+            places = mostVisited ?: listOf(),
             onItemClick = {
                 rootNavController.navigate(AppScreens.PlaceScreen.name.plus(it))
             },

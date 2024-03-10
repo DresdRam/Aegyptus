@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import sq.mayv.aegyptus.util.extension.shimmer
 
 @Composable
-fun NearbyListShimmer() {
+fun HomePlacesListShimmer() {
     LazyRow(
         userScrollEnabled = false
     ) {

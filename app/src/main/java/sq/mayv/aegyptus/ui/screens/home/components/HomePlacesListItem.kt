@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -36,7 +37,7 @@ import sq.mayv.aegyptus.model.Place
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun NearbyListItem(
+fun HomePlacesListItem(
     place: Place,
     onItemClick: (Int) -> Unit,
     onSaveClick: (Int, Boolean) -> Unit
@@ -105,20 +106,25 @@ fun NearbyListItem(
             }
 
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
                 text = place.name,
                 color = Color.Black,
                 textAlign = TextAlign.Center,
-                fontSize = 12.sp
+                fontSize = 12.sp,
+                overflow = TextOverflow.Ellipsis
             )
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "${place.distanceInMeters} meters away",
-                color = colorResource(id = R.color.orange),
-                textAlign = TextAlign.Center,
-                fontSize = 12.sp
-            )
+            if (place.distanceInMeters != -1) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "${place.distanceInMeters} meters away",
+                    color = colorResource(id = R.color.orange),
+                    textAlign = TextAlign.Center,
+                    fontSize = 12.sp
+                )
+            }
         }
     }
 }

@@ -42,7 +42,19 @@ fun HomeDataShimmer() {
                 .shimmer(),
         )
 
-        NearbyListShimmer()
+        HomePlacesListShimmer()
+
+        Box(
+            modifier = Modifier
+                .padding(top = 20.dp)
+                .padding(horizontal = 15.dp)
+                .height(25.dp)
+                .width(120.dp)
+                .clip(RoundedCornerShape(5.dp))
+                .shimmer(),
+        )
+
+        HomePlacesListShimmer()
 
         Box(
             modifier = Modifier

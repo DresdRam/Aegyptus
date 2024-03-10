@@ -30,16 +30,18 @@ fun HomeScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.getNearbyPlaces()
+        viewModel.getMostVisitedPlaces()
     }
 
-    val places by viewModel.placesData.collectAsState()
+    val nearby by viewModel.nearbyData.collectAsState()
+    val mostVisited by viewModel.mostVisitedData.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
         AnimatedContent(
-            targetState = viewModel.isPlacesLoading,
+            targetState = viewModel.isNearbyLoading || viewModel.isMostVisitedLoading,
             label = "Shimmer Transition",
             transitionSpec = {
                 fadeIn(
@@ -55,7 +57,7 @@ fun HomeScreen(
                 HomeDataShimmer()
             } else {
                 AnimatedContent(
-                    targetState = viewModel.isSuccessful,
+                    targetState = viewModel.isNearbySuccessful && viewModel.isMostVisitedSuccessful,
                     label = "Shimmer Transition",
                     transitionSpec = {
                         fadeIn(
@@ -69,7 +71,8 @@ fun HomeScreen(
                 ) { isSuccessful ->
                     if (isSuccessful) {
                         HomeDataView(
-                            places = places.data,
+                            nearby = nearby.data,
+                            mostVisited =  mostVisited.data,
                             rootNavController = rootNavController,
                             viewModel = viewModel
                         )
