@@ -28,10 +28,15 @@ class HomeViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _placesData = MutableStateFlow(Resource<List<Place>>())
-    val placesData: StateFlow<Resource<List<Place>>> = _placesData
-    var isPlacesLoading by mutableStateOf(true)
-    var isSuccessful by mutableStateOf(false)
+    private val _nearbyData = MutableStateFlow(Resource<List<Place>>())
+    val nearbyData: StateFlow<Resource<List<Place>>> = _nearbyData
+    var isNearbyLoading by mutableStateOf(true)
+    var isNearbySuccessful by mutableStateOf(false)
+
+    private val _mostVisitedData = MutableStateFlow(Resource<List<Place>>())
+    val mostVisitedData: StateFlow<Resource<List<Place>>> = _mostVisitedData
+    var isMostVisitedLoading by mutableStateOf(true)
+    var isMostVisitedSuccessful by mutableStateOf(false)
 
     var isAddingFavorite by mutableStateOf(false)
     var addedSuccessfuly by mutableStateOf(false)
@@ -40,18 +45,35 @@ class HomeViewModel @Inject constructor(
 
     fun getNearbyPlaces() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(!isPlacesLoading) {
-                isPlacesLoading = true
+            if(!isNearbyLoading) {
+                isNearbyLoading = true
             }
 
-            _placesData.value =
+            _nearbyData.value =
                 placesRepository.getNearbyPlaces(Coordinates(1.10, 11.110), preferences.token)
 
-            val statusCode = _placesData.value.statusCode
+            val statusCode = _nearbyData.value.statusCode
 
-            isSuccessful = statusCode == 200 || statusCode == 201
+            isNearbySuccessful = statusCode == 200 || statusCode == 201
 
-            isPlacesLoading = false
+            isNearbyLoading = false
+        }
+    }
+
+    fun getMostVisitedPlaces() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if(!isMostVisitedLoading) {
+                isMostVisitedLoading = true
+            }
+
+            _mostVisitedData.value =
+                placesRepository.getMostVisitedPlaces(preferences.token)
+
+            val statusCode = mostVisitedData.value.statusCode
+
+            isMostVisitedSuccessful = statusCode == 200 || statusCode == 201
+
+            isMostVisitedLoading = false
         }
     }
 

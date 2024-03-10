@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import sq.mayv.aegyptus.model.Place
+import sq.mayv.aegyptus.ui.screens.search.components.PlacesListView
 import sq.mayv.aegyptus.ui.screens.search.components.SearchTopBar
 
 @Composable
@@ -31,6 +33,13 @@ fun SearchScreen(
             color = Color.White
         ) {
 
+            PlacesListView(
+                places = listOf(Place(), Place(), Place(), Place(), Place()),
+                onItemClick = {},
+                onSaveClick = { placeId, isFavorite ->
+
+                }
+            )
         }
     }
 }

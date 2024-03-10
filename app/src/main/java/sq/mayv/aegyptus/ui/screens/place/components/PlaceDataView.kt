@@ -56,7 +56,8 @@ fun PlaceDataView(
         Text(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(bottom = 35.dp, start = 15.dp),
+                .padding(bottom = 35.dp)
+                .padding(horizontal = 15.dp),
             text = place?.name ?: "Failed to load the name",
             color = Color.White,
             textAlign = TextAlign.Center,

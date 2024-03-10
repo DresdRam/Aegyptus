@@ -21,6 +21,12 @@ interface Api {
         @Header("Authorization") authToken: String
     ): Response<Place>
 
+    @GET("place/most-visited")
+    suspend fun getMostVisitedPlaces(
+        @Query("governorate") governorateCode: Int = 1,
+        @Header("Authorization") authToken: String
+    ): Response<List<Place>>
+
     @GET("favorite/get-all")
     suspend fun getAllFavorites(
         @Header("Authorization") authToken: String
@@ -30,7 +36,7 @@ interface Api {
     suspend fun getNearbyPlaces(
         @Query("latitude") latitude: Double = 31.209723399356797,
         @Query("longitude") longitude: Double = 29.882055618724696,
-        @Query("governorate") governorate: Int = 4,
+        @Query("governorate") governorate: Int = 1,
         @Query("max_distance") maxDistance: Int = 1,
         @Header("Authorization") authToken: String
     ): Response<List<Place>>

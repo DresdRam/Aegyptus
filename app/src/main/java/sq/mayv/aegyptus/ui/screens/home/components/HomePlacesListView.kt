@@ -6,14 +6,14 @@ import androidx.compose.runtime.Composable
 import sq.mayv.aegyptus.model.Place
 
 @Composable
-fun NearbyListView(
+fun HomePlacesListView(
     places: List<Place>,
     onItemClick: (Int) -> Unit,
     onSaveClick: (Int, Boolean) -> Unit
 ) {
     LazyRow() {
         items(items = places, key = { it.id }) { place ->
-            NearbyListItem(
+            HomePlacesListItem(
                 place = place,
                 onItemClick = { onItemClick(it) },
                 onSaveClick = { id, isFavorite ->
