@@ -89,4 +89,31 @@ class PlacesRepository @Inject constructor(
 
         return placesResource
     }
+
+    suspend fun search(query: String, authToken: String): Resource<List<Place>> {
+
+        val placesResource = Resource<List<Place>>()
+
+        try {
+
+            val response = api.search(query = query, authToken = authToken)
+            placesResource.statusCode = response.code()
+
+            if (response.isSuccessful) {
+                placesResource.data = response.body()
+            } else {
+                placesResource.exception =
+                    if (response.code() == 404) Exception("There is no connection to the server!")
+                    else if (response.code() == 401) Exception("You are not authorized")
+                    else if (response.code() == 400) Exception("Bad Request Exception")
+                    else Exception("Internal Server Error")
+            }
+
+        } catch (exception: Exception) {
+            placesResource.exception = exception
+            placesResource.statusCode = 400
+        }
+
+        return placesResource
+    }
 }

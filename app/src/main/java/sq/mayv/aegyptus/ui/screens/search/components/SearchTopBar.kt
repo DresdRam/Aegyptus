@@ -23,13 +23,14 @@ import sq.mayv.aegyptus.components.SearchTextField
 @Composable
 fun SearchTopBar(
     navController: NavController,
-    searchQuery: String
+    searchQuery: String,
+    onSearchClick: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
             .padding(end = 20.dp)
             .fillMaxWidth()
-            .height(80.dp),
+            .height(70.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -61,7 +62,9 @@ fun SearchTopBar(
                     trailingIconVisibility = false
                 }
             },
-            onSearchClick = { },
+            onSearchClick = {
+                onSearchClick(searchQuery)
+            },
             onTrailingIconClick = {
                 searchQuery = ""
                 trailingIconVisibility = false
