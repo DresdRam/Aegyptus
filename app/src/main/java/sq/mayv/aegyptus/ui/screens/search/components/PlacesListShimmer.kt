@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import sq.mayv.aegyptus.util.extension.shimmer
 
@@ -25,33 +26,23 @@ fun PlacesListShimmer() {
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         repeat(4) {
-            Box(
+            Card(
                 modifier = Modifier
-                    .padding(horizontal = 15.dp)
+                    .padding(horizontal = 20.dp)
                     .fillMaxWidth()
-                    .height(150.dp),
+                    .height(250.dp),
+                shape = RoundedCornerShape(15.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Transparent
+                ),
+                elevation = CardDefaults.cardElevation(15.dp)
             ) {
-
                 Box(
                     modifier = Modifier
-                        .padding(vertical = 10.dp)
-                        .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
                         .fillMaxSize()
-                        .shimmer(),
+                        .shimmer()
                 )
-
-                Card(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    elevation = CardDefaults.cardElevation(15.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .width(150.dp)
-                            .height(150.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .shimmer(),
-                    )
-                }
             }
         }
     }

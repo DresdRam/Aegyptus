@@ -21,6 +21,12 @@ interface Api {
         @Header("Authorization") authToken: String
     ): Response<Place>
 
+    @GET("place/search")
+    suspend fun search(
+        @Query("query") query: String,
+        @Header("Authorization") authToken: String
+    ): Response<List<Place>>
+
     @GET("place/most-visited")
     suspend fun getMostVisitedPlaces(
         @Query("governorate") governorateCode: Int = 1,
