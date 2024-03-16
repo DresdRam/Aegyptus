@@ -25,7 +25,7 @@ fun PlaceImageView(
             .fillMaxWidth()
             .height(300.dp),
         state = pagerState,
-        outOfBoundsPageCount = pagerState.pageCount
+        outOfBoundsPageCount = 1
     ) { position ->
         GlideImage(
             modifier = Modifier.fillMaxSize(),

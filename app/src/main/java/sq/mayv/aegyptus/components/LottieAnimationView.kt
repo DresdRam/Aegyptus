@@ -14,7 +14,7 @@ fun LottieAnimationView(
     modifier: Modifier = Modifier,
     @RawRes lottie: Int,
     iterateForEver: Boolean = true
-    ) {
+) {
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottie))
 

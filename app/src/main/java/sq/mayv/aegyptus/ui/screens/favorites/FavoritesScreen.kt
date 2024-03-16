@@ -12,20 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import sq.mayv.aegyptus.ui.navigation.AppScreens
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesErrorView
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListShimmer
 import sq.mayv.aegyptus.ui.screens.favorites.components.FavoritesListView
+import sq.mayv.aegyptus.ui.screens.favorites.viewstate.FavoritesViewState
 
 @Composable
 fun FavoritesScreen(
@@ -34,22 +32,18 @@ fun FavoritesScreen(
     rootNavController: NavController
 ) {
 
-    val coroutineScope = rememberCoroutineScope()
-
     LaunchedEffect(key1 = true) {
-        coroutineScope.launch(Dispatchers.IO) {
-            viewModel.getAllFavorites()
-        }
+        viewModel.getAllFavorites()
     }
 
-    val favorites by viewModel.favoritesData.collectAsState()
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.White
     ) {
         AnimatedContent(
-            targetState = viewModel.isFavoritesLoading,
+            targetState = viewState,
             label = "",
             transitionSpec = {
                 fadeIn(
@@ -60,42 +54,32 @@ fun FavoritesScreen(
                     )
                 )
             }
-        ) { isLoading ->
+        ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                if (isLoading) {
-                    FavoritesListShimmer()
-                } else {
-                    AnimatedContent(
-                        targetState = viewModel.isSuccessful,
-                        label = "",
-                        transitionSpec = {
-                            fadeIn(
-                                animationSpec = tween(600, easing = EaseIn)
-                            ).togetherWith(
-                                fadeOut(
-                                    animationSpec = tween(600, easing = EaseOut)
-                                )
-                            )
-                        }
-                    ) { isSuccessful ->
-                        if (isSuccessful) {
-                            FavoritesListView(
-                                favorites = favorites.data ?: listOf(),
-                                onItemClick = {
-                                    rootNavController.navigate(
-                                        AppScreens.PlaceScreen.name.plus(
-                                            it
-                                        )
+                when (it) {
+                    FavoritesViewState.Loading -> {
+                        FavoritesListShimmer()
+                    }
+
+                    FavoritesViewState.Failure -> {
+                        FavoritesErrorView()
+                    }
+
+                    is FavoritesViewState.Success -> {
+                        FavoritesListView(
+                            favorites = it.places,
+                            onItemClick = {
+                                rootNavController.navigate(
+                                    AppScreens.PlaceScreen.name.plus(
+                                        it
                                     )
-                                }
-                            )
-                        } else {
-                            FavoritesErrorView()
-                        }
+                                )
+                            }
+                        )
                     }
                 }
             }

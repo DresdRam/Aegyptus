@@ -44,7 +44,7 @@ class FavoritesRepository @Inject constructor(
 
         try {
 
-            val response = api.addToFavorites(body = SavePlace(placeId),authToken = authToken)
+            val response = api.addToFavorites(body = SavePlace(placeId), authToken = authToken)
             resource.statusCode = response.code()
 
             if (response.isSuccessful) {
@@ -71,7 +71,7 @@ class FavoritesRepository @Inject constructor(
 
         try {
 
-            val response = api.removeFromFavorites(placeId = placeId,authToken = authToken)
+            val response = api.removeFromFavorites(placeId = placeId, authToken = authToken)
             resource.statusCode = response.code()
 
             if (response.isSuccessful) {

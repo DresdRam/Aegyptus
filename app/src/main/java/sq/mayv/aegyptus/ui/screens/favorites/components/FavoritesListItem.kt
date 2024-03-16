@@ -57,7 +57,7 @@ fun FavoritesListItem(
             .fillMaxWidth()
             .height(150.dp)
             .clickable {
-                       onItemClick(favorite.id)
+                onItemClick(favorite.id)
             },
     ) {
 
@@ -111,6 +111,7 @@ fun FavoritesListItem(
                     modifier = Modifier
                         .size(150.dp),
                     state = pagerState,
+                    outOfBoundsPageCount = 1,
                     verticalAlignment = Alignment.Top
                 ) { position ->
                     GlideImage(

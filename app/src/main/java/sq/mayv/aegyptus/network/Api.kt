@@ -11,6 +11,7 @@ import sq.mayv.aegyptus.dto.SavePlace
 import sq.mayv.aegyptus.dto.SignInDto
 import sq.mayv.aegyptus.dto.SignUpDto
 import sq.mayv.aegyptus.model.Auth
+import sq.mayv.aegyptus.model.Category
 import sq.mayv.aegyptus.model.Place
 
 interface Api {
@@ -21,11 +22,20 @@ interface Api {
         @Header("Authorization") authToken: String
     ): Response<Place>
 
+    @GET("place/get-all")
+    suspend fun getAllPlaces(
+        @Query("governorate") governorate: Int,
+        @Header("Authorization") authToken: String
+    ): Response<List<Place>>
+
     @GET("place/search")
     suspend fun search(
         @Query("query") query: String,
         @Header("Authorization") authToken: String
     ): Response<List<Place>>
+
+    @GET("category/get-all")
+    suspend fun getAllCategories(): Response<List<Category>>
 
     @GET("place/most-visited")
     suspend fun getMostVisitedPlaces(
@@ -40,10 +50,10 @@ interface Api {
 
     @GET("place/get-nearby")
     suspend fun getNearbyPlaces(
-        @Query("latitude") latitude: Double = 31.209723399356797,
-        @Query("longitude") longitude: Double = 29.882055618724696,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double,
         @Query("governorate") governorate: Int = 1,
-        @Query("max_distance") maxDistance: Int = 1,
+        @Query("max_distance") maxDistance: Int, // Max Distance in Kilometers.
         @Header("Authorization") authToken: String
     ): Response<List<Place>>
 

@@ -1,6 +1,5 @@
 package sq.mayv.aegyptus.ui.screens.search
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
@@ -23,11 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import sq.mayv.aegyptus.model.Place
+import sq.mayv.aegyptus.components.MessageView
 import sq.mayv.aegyptus.ui.navigation.AppScreens
 import sq.mayv.aegyptus.ui.screens.search.components.PlacesListShimmer
 import sq.mayv.aegyptus.ui.screens.search.components.PlacesListView
-import sq.mayv.aegyptus.ui.screens.search.components.SearchEmptyView
 import sq.mayv.aegyptus.ui.screens.search.components.SearchErrorView
 import sq.mayv.aegyptus.ui.screens.search.components.SearchTopBar
 
@@ -41,8 +39,11 @@ fun SearchScreen(
     var query by remember { mutableStateOf(searchQuery) }
 
     LaunchedEffect(key1 = query) {
+        viewModel.getAllCategories()
         viewModel.search(query)
     }
+
+    val categories by viewModel.categoriesData.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -50,8 +51,11 @@ fun SearchScreen(
             SearchTopBar(
                 navController = navController,
                 searchQuery = searchQuery,
+                categories = categories.data ?: listOf(),
                 onSearchClick = {
-                    query = it
+                    if (it.isNotEmpty()) {
+                        query = it
+                    }
                 }
             )
         }
@@ -109,7 +113,7 @@ fun SearchScreen(
                                     )
                                 }
                             ) { isEmpty ->
-                                if(isEmpty) {
+                                if (isEmpty) {
                                     PlacesListView(
                                         places = places.data ?: listOf(),
                                         onItemClick = { placeId ->
@@ -124,7 +128,7 @@ fun SearchScreen(
                                         }
                                     )
                                 } else {
-                                    SearchEmptyView()
+                                    MessageView(message = "There is no result for this search query.")
                                 }
                             }
                         } else {

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+
 plugins {
     id("com.google.devtools.ksp")
     id("com.android.application")
@@ -20,6 +22,13 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
+        val mapsApiKey = properties.getProperty("MAPS_API_KEY")
+
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -40,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.9"
@@ -53,19 +63,20 @@ android {
 
 dependencies {
 
+    //Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
+
     // Accompanist Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 
+    // Google Maps Compose & Google Play Services
+    implementation("com.google.maps.android:maps-compose:4.3.3")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
     // Glide
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
-
-    // OSM Maps SDK for Android
-    implementation("org.osmdroid:osmdroid-android:6.1.16")
-    // This library dependencies
-    implementation("tech.utsmankece:osm-android-compose:0.0.5")
-
-    //Huawei Map Kit
-    //implementation("com.huawei.hms:maps:5.2.0.301")
 
     // Splash Screen API
     implementation("androidx.core:core-splashscreen:1.0.1")

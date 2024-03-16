@@ -13,8 +13,7 @@ enum class AppScreens {
     RecoverPasswordScreen;
 
     companion object {
-        fun fromRoute(route: String): AppScreens
-        = when(route.substringBefore('/')){
+        fun fromRoute(route: String): AppScreens = when (route.substringBefore('/')) {
             SignInScreen.name -> SignInScreen
             SignUpScreen.name -> SignUpScreen
             HomeScreen.name -> HomeScreen

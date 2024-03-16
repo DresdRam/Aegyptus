@@ -15,6 +15,6 @@ data class Place(
     val time: String = "",
     val thumbnail: String = "",
     val images: String = "",
-    @SerializedName("is_favorite") val isFavorite: Boolean = false,
+    @SerializedName("is_favorite") var isFavorite: Boolean = false,
     @SerializedName("distance_in_meters") val distanceInMeters: Int = -1
 )

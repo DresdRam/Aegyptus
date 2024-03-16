@@ -12,13 +12,11 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
 
 @Composable
@@ -30,6 +28,9 @@ fun SearchTextField(
     onSearchClick: () -> Unit,
     onTrailingIconClick: () -> Unit
 ) {
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(15.dp),
@@ -70,7 +71,10 @@ fun SearchTextField(
             placeholder = { Text(text = "Search") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
-                onSearch = { onSearchClick() }
+                onSearch = {
+                    keyboardController?.hide()
+                    onSearchClick()
+                }
             )
         )
     }

@@ -1,13 +1,20 @@
 package sq.mayv.aegyptus.ui.screens.search.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -86,21 +93,36 @@ fun PlacesListItem(
                 ) {
                     Card(
                         modifier = Modifier
-                            .size(24.dp),
-                        shape = CircleShape,
+                            .size(26.dp),
+                        shape = RoundedCornerShape(5.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White
                         ),
                     ) {
-                        Icon(
-                            modifier = Modifier
-                                .padding(3.dp),
-                            painter = if (isFavorite) painterResource(id = R.drawable.ic_saved) else painterResource(
-                                id = R.drawable.ic_save
-                            ),
-                            contentDescription = "",
-                            tint = colorResource(id = R.color.primary)
-                        )
+                        AnimatedContent(
+                            targetState = isFavorite,
+                            label = "",
+                            transitionSpec = {
+                                fadeIn(
+                                    animationSpec = tween(250, easing = EaseIn)
+                                ).togetherWith(
+                                    fadeOut(
+                                        animationSpec = tween(250, easing = EaseOut)
+                                    )
+                                )
+                            }
+                        ) { condition ->
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Icon(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    painter = if (condition) painterResource(id = R.drawable.ic_heart_filled) else painterResource(
+                                        id = R.drawable.ic_heart
+                                    ),
+                                    contentDescription = "",
+                                    tint = if (condition) Color.Red else colorResource(id = R.color.primary)
+                                )
+                            }
+                        }
                     }
                 }
             }

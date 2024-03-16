@@ -22,7 +22,7 @@ class SplashViewModel @Inject constructor(preferences: SharedPreferences) : View
     val startDestination: State<String> = _startDestination
 
     init {
-        if(!preferences.firstLaunch) {
+        if (!preferences.firstLaunch) {
             if (preferences.token.isNotEmpty()) {
                 _startDestination.value = AppScreens.Main.name
             } else {

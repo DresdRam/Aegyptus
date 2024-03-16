@@ -17,9 +17,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import sq.mayv.aegyptus.R
+import sq.mayv.aegyptus.model.Category
+import sq.mayv.aegyptus.util.CategoryItem
 
 @Composable
-fun PlaceCategoryView(categoryId: Int) {
+fun PlaceCategoryView(category: Category) {
+
+    val categoryItem = CategoryItem.getCategoryItem(category = category)
+
     Card(
         modifier = Modifier.size(45.dp),
         shape = CircleShape,
@@ -40,7 +45,7 @@ fun PlaceCategoryView(categoryId: Int) {
                 modifier = Modifier
                     .size(35.dp)
                     .align(Alignment.Center),
-                painter = painterResource(id = getCategoryIcon(categoryId)),
+                painter = painterResource(id = categoryItem.icon),
                 contentDescription = "",
                 tint = colorResource(id = R.color.primary)
             )
@@ -49,29 +54,7 @@ fun PlaceCategoryView(categoryId: Int) {
     }
 
     Text(
-        text = getCategoryName(categoryId),
+        text = categoryItem.title,
         color = colorResource(id = R.color.description)
     )
-}
-
-private fun getCategoryName(id: Int): String {
-    return when (id) {
-        1 -> "Beach"
-        2 -> "Cultural"
-        3 -> "Entertainment"
-        4 -> "Historical"
-        5 -> "Religious"
-        else -> "Historical"
-    }
-}
-
-private fun getCategoryIcon(id: Int): Int {
-    return when (id) {
-        1 -> R.drawable.ic_beach
-        2 -> R.drawable.ic_cultural
-        3 -> R.drawable.ic_entertainment
-        4 -> R.drawable.ic_historical
-        5 -> R.drawable.ic_religious_2
-        else -> R.drawable.ic_historical
-    }
 }
