@@ -1,4 +1,4 @@
-package sq.mayv.aegyptus.util.extension
+package sq.mayv.aegyptus.extension
 
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable

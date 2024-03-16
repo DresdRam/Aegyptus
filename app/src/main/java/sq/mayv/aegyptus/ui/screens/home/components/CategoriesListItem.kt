@@ -42,7 +42,9 @@ fun CategoriesListItem(@DrawableRes icon: Int, title: String) {
                     .height(70.dp),
             ) {
                 Icon(
-                    modifier = Modifier.align(Alignment.Center).size(38.dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(38.dp),
                     painter = painterResource(id = icon),
                     contentDescription = "",
                     tint = colorResource(id = R.color.primary)

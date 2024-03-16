@@ -16,6 +16,8 @@ import sq.mayv.aegyptus.dto.SignInDto
 import sq.mayv.aegyptus.model.Auth
 import sq.mayv.aegyptus.repository.AuthRepository
 import sq.mayv.aegyptus.util.PreferenceHelper.token
+import sq.mayv.aegyptus.util.PreferenceHelper.userEmail
+import sq.mayv.aegyptus.util.PreferenceHelper.userName
 import javax.inject.Inject
 
 
@@ -41,6 +43,8 @@ class SignInViewModel @Inject constructor(
 
             if (statusCode == 200 || statusCode == 201) {
                 preferences.token = _signInData.value.data!!.authorizationToken
+                preferences.userName = _signInData.value.data!!.name
+                preferences.userEmail = _signInData.value.data!!.email
                 isSignInSuccessful = true
             }
 

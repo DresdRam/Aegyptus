@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import sq.mayv.aegyptus.util.extension.shimmer
+import sq.mayv.aegyptus.extension.shimmer
 
 @Composable
 fun PlaceDataShimmer() {

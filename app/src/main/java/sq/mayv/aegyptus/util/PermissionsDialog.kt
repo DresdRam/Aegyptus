@@ -14,21 +14,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import sq.mayv.aegyptus.data.IPermissionTextProvider
 
 @Composable
 fun PermissionDialog(
-    permissionTextProvider: PermissionTextProvider,
-    isPermanentlyDeclined: Boolean,
+    permissionTextProvider: IPermissionTextProvider,
     onDismiss: () -> Unit,
     onOkClick: () -> Unit,
-    onGoToAppSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     AlertDialog(
         properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
         ),
         shape = RoundedCornerShape(10.dp),
         onDismissRequest = onDismiss,
@@ -38,21 +37,13 @@ fun PermissionDialog(
             ) {
                 Divider()
                 Text(
-                    text = if (isPermanentlyDeclined) {
-                        "Grant permission"
-                    } else {
-                        "OK"
-                    },
+                    text = "OK",
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            if (isPermanentlyDeclined) {
-                                onGoToAppSettingsClick()
-                            } else {
-                                onOkClick()
-                            }
+                            onOkClick()
                         }
                         .padding(16.dp)
                 )
@@ -63,9 +54,7 @@ fun PermissionDialog(
         },
         text = {
             Text(
-                text = permissionTextProvider.getDescription(
-                    isPermanentlyDeclined = isPermanentlyDeclined
-                )
+                text = permissionTextProvider.getDescription()
             )
         },
         modifier = modifier

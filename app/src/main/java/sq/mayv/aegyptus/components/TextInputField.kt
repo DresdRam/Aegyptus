@@ -65,7 +65,9 @@ fun TextInputField(
 
             Text(
                 text = message,
-                modifier = messageModifier.padding(top = 10.dp).alpha(alpha),
+                modifier = messageModifier
+                    .padding(top = 10.dp)
+                    .alpha(alpha),
                 color = colorResource(id = R.color.gold)
             )
         }

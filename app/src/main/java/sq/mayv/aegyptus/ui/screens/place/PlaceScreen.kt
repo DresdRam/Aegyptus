@@ -15,9 +15,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -76,7 +80,7 @@ fun PlaceScreen(
                         modifier = Modifier
                             .size(50.dp)
                             .align(Alignment.TopStart)
-                            .padding(start = 15.dp),
+                            .padding(start = 10.dp),
                         onClick = {
                             navController.popBackStack()
                         }
@@ -90,13 +94,17 @@ fun PlaceScreen(
                     }
 
                     if (condition) {
-                        var isFavorite by remember { mutableStateOf(place.value.data?.isFavorite ?: false) }
+                        var isFavorite by remember {
+                            mutableStateOf(
+                                place.value.data?.isFavorite ?: false
+                            )
+                        }
 
                         IconButton(
                             modifier = Modifier
-                                .size(50.dp)
+                                .padding(10.dp)
                                 .align(Alignment.TopEnd)
-                                .padding(end = 15.dp),
+                                .size(30.dp),
                             onClick = {
                                 if (!viewModel.isAddingFavorite && !viewModel.isRemovingFavorite) {
                                     if (!isFavorite) {
@@ -108,14 +116,38 @@ fun PlaceScreen(
                                 }
                             }
                         ) {
-                            Icon(
-                                modifier = Modifier.size(25.dp),
-                                painter = if (isFavorite) painterResource(id = R.drawable.ic_saved) else painterResource(
-                                    id = R.drawable.ic_save
-                                ),
-                                contentDescription = "Save Place Icon",
-                                tint = Color.White
-                            )
+                            Card(
+                                modifier = Modifier.fillMaxSize(),
+                                shape = RoundedCornerShape(5.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color.White)
+                            ) {
+                                AnimatedContent(
+                                    targetState = isFavorite,
+                                    label = "",
+                                    transitionSpec = {
+                                        fadeIn(
+                                            animationSpec = tween(250, easing = EaseIn)
+                                        ).togetherWith(
+                                            fadeOut(
+                                                animationSpec = tween(250, easing = EaseOut)
+                                            )
+                                        )
+                                    }
+                                ) { condition ->
+                                    Box(modifier = Modifier.fillMaxSize()) {
+                                        Icon(
+                                            modifier = Modifier
+                                                .align(Alignment.Center)
+                                                .size(25.dp),
+                                            painter = if (condition) painterResource(id = R.drawable.ic_heart_filled) else painterResource(
+                                                id = R.drawable.ic_heart
+                                            ),
+                                            contentDescription = "Save Place Icon",
+                                            tint = if (condition) Color.Red else colorResource(id = R.color.primary)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import sq.mayv.aegyptus.R
+import sq.mayv.aegyptus.model.Category
 import sq.mayv.aegyptus.model.Place
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -103,13 +106,14 @@ fun PlaceDataView(
 
         Column(
             modifier = Modifier
-                .padding(top = 20.dp)
-                .fillMaxWidth(),
+                .padding(top = 20.dp, bottom = 15.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
 
-            PlaceCategoryView(categoryId = place?.category?.id ?: 4)
+            PlaceCategoryView(category = place?.category ?: Category())
 
             PlaceInfoView(
                 location = place?.address ?: "Failed to load",

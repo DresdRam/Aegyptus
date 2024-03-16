@@ -10,12 +10,19 @@ import com.mayv.ctgate.data.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import sq.mayv.aegyptus.model.Category
 import sq.mayv.aegyptus.model.Coordinates
 import sq.mayv.aegyptus.model.Place
+import sq.mayv.aegyptus.repository.CategoriesRepository
 import sq.mayv.aegyptus.repository.FavoritesRepository
 import sq.mayv.aegyptus.repository.PlacesRepository
+import sq.mayv.aegyptus.ui.screens.home.viewstate.CategoriesViewState
+import sq.mayv.aegyptus.ui.screens.home.viewstate.PlacesViewState
+import sq.mayv.aegyptus.usecase.LocationUseCase
+import sq.mayv.aegyptus.util.CategoryItem
+import sq.mayv.aegyptus.util.PreferenceHelper.nearbyThreshold
 import sq.mayv.aegyptus.util.PreferenceHelper.token
 import javax.inject.Inject
 
@@ -24,19 +31,27 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val placesRepository: PlacesRepository,
     private val favoritesRepository: FavoritesRepository,
-    private val preferences: SharedPreferences
+    private val categoriesRepository: CategoriesRepository,
+    private val preferences: SharedPreferences,
+    private val locationUseCase: LocationUseCase
 ) :
     ViewModel() {
 
-    private val _nearbyData = MutableStateFlow(Resource<List<Place>>())
-    val nearbyData: StateFlow<Resource<List<Place>>> = _nearbyData
-    var isNearbyLoading by mutableStateOf(true)
-    var isNearbySuccessful by mutableStateOf(false)
+    private val _nearbyViewState: MutableStateFlow<PlacesViewState> =
+        MutableStateFlow(PlacesViewState.Loading)
+    val nearbyViewState = _nearbyViewState.asStateFlow()
 
+    private val _mostVisitedViewState: MutableStateFlow<PlacesViewState> =
+        MutableStateFlow(PlacesViewState.Loading)
+    val mostVisitedViewState = _mostVisitedViewState.asStateFlow()
+
+    private val _categoriesViewState: MutableStateFlow<CategoriesViewState> =
+        MutableStateFlow(CategoriesViewState.Loading)
+    val categoriesViewState = _categoriesViewState.asStateFlow()
+
+    private val _nearbyData = MutableStateFlow(Resource<List<Place>>())
     private val _mostVisitedData = MutableStateFlow(Resource<List<Place>>())
-    val mostVisitedData: StateFlow<Resource<List<Place>>> = _mostVisitedData
-    var isMostVisitedLoading by mutableStateOf(true)
-    var isMostVisitedSuccessful by mutableStateOf(false)
+    private val _categoriesData = MutableStateFlow(Resource<List<Category>>())
 
     var isAddingFavorite by mutableStateOf(false)
     var addedSuccessfuly by mutableStateOf(false)
@@ -45,35 +60,78 @@ class HomeViewModel @Inject constructor(
 
     fun getNearbyPlaces() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(!isNearbyLoading) {
-                isNearbyLoading = true
+            if (_nearbyViewState.value != PlacesViewState.Loading) {
+                _nearbyViewState.value = PlacesViewState.Loading
             }
 
-            _nearbyData.value =
-                placesRepository.getNearbyPlaces(Coordinates(1.10, 11.110), preferences.token)
+            locationUseCase.invoke().collect { latLng ->
+                if (_nearbyViewState.value != PlacesViewState.Loading) {
+                    _nearbyViewState.value = PlacesViewState.Loading
+                }
 
-            val statusCode = _nearbyData.value.statusCode
+                _nearbyData.value =
+                    placesRepository.getNearbyPlaces(
+                        coordinates = Coordinates(latLng?.latitude ?: 0.00, latLng?.longitude ?: 0.00),
+                        maxDistance = preferences.nearbyThreshold,
+                        authToken = preferences.token
+                    )
 
-            isNearbySuccessful = statusCode == 200 || statusCode == 201
+                val statusCode = _nearbyData.value.statusCode
+                val isNearbySuccessful = statusCode == 200 || statusCode == 201
 
-            isNearbyLoading = false
+                if (!isNearbySuccessful) {
+                    _nearbyViewState.value = PlacesViewState.Failure
+                } else {
+                    _nearbyViewState.value =
+                        PlacesViewState.Success(_nearbyData.value.data ?: listOf())
+                }
+            }
         }
     }
 
     fun getMostVisitedPlaces() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(!isMostVisitedLoading) {
-                isMostVisitedLoading = true
+            if (_mostVisitedViewState.value != PlacesViewState.Loading) {
+                _mostVisitedViewState.value = PlacesViewState.Loading
             }
 
             _mostVisitedData.value =
                 placesRepository.getMostVisitedPlaces(preferences.token)
 
-            val statusCode = mostVisitedData.value.statusCode
+            val statusCode = _mostVisitedData.value.statusCode
+            val isMostVisitedSuccessful = statusCode == 200 || statusCode == 201
 
-            isMostVisitedSuccessful = statusCode == 200 || statusCode == 201
+            if (!isMostVisitedSuccessful) {
+                _mostVisitedViewState.value = PlacesViewState.Failure
+            } else {
+                _mostVisitedViewState.value =
+                    PlacesViewState.Success(_mostVisitedData.value.data ?: listOf())
+            }
+        }
+    }
 
-            isMostVisitedLoading = false
+    fun getCategories() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (_categoriesViewState.value != CategoriesViewState.Loading) {
+                _categoriesViewState.value = CategoriesViewState.Loading
+            }
+
+            _categoriesData.value =
+                categoriesRepository.getAll()
+
+            val statusCode = _categoriesData.value.statusCode
+            val isCategoriesSuccessful = statusCode == 200 || statusCode == 201
+
+            if (!isCategoriesSuccessful) {
+                _categoriesViewState.value = CategoriesViewState.Failure
+            } else {
+                _categoriesViewState.value =
+                    CategoriesViewState.Success(
+                        CategoryItem.getCategoryItems(
+                            _categoriesData.value.data ?: listOf()
+                        )
+                    )
+            }
         }
     }
 
@@ -104,5 +162,4 @@ class HomeViewModel @Inject constructor(
             isRemovingFavorite = false
         }
     }
-
 }

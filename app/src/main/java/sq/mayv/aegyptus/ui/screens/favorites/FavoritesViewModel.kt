@@ -1,19 +1,17 @@
 package sq.mayv.aegyptus.ui.screens.favorites
 
 import android.content.SharedPreferences
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mayv.ctgate.data.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import sq.mayv.aegyptus.model.Place
 import sq.mayv.aegyptus.repository.FavoritesRepository
+import sq.mayv.aegyptus.ui.screens.favorites.viewstate.FavoritesViewState
 import sq.mayv.aegyptus.util.PreferenceHelper.token
 import javax.inject.Inject
 
@@ -25,25 +23,29 @@ class FavoritesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
+    private val _viewState: MutableStateFlow<FavoritesViewState> =
+        MutableStateFlow(FavoritesViewState.Loading)
+    val viewState = _viewState.asStateFlow()
+
     private val _favoritesData = MutableStateFlow(Resource<List<Place>>())
-    val favoritesData: StateFlow<Resource<List<Place>>> = _favoritesData
-    var isFavoritesLoading by mutableStateOf(true)
-    var isSuccessful by mutableStateOf(false)
 
     fun getAllFavorites() {
         viewModelScope.launch(Dispatchers.IO) {
-            if(!isFavoritesLoading) {
-                isFavoritesLoading = true
+            if (_viewState.value != FavoritesViewState.Loading) {
+                _viewState.value = FavoritesViewState.Loading
             }
 
             _favoritesData.value =
                 favoritesRepository.getAllFavorites(preferences.token)
 
             val statusCode = _favoritesData.value.statusCode
+            val isSuccessful = statusCode == 200 || statusCode == 201
 
-            isSuccessful = statusCode == 200 || statusCode == 201
-
-            isFavoritesLoading = false
+            if(!isSuccessful) {
+                _viewState.value = FavoritesViewState.Failure
+            } else {
+                _viewState.value = FavoritesViewState.Success(_favoritesData.value.data ?: listOf())
+            }
         }
     }
 

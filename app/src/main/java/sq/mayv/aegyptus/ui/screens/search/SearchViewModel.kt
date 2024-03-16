@@ -1,7 +1,6 @@
 package sq.mayv.aegyptus.ui.screens.search
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,8 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.http.Query
+import sq.mayv.aegyptus.model.Category
 import sq.mayv.aegyptus.model.Place
+import sq.mayv.aegyptus.repository.CategoriesRepository
 import sq.mayv.aegyptus.repository.FavoritesRepository
 import sq.mayv.aegyptus.repository.PlacesRepository
 import sq.mayv.aegyptus.util.PreferenceHelper.token
@@ -25,6 +25,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val placesRepository: PlacesRepository,
     private val favoritesRepository: FavoritesRepository,
+    private val categoriesRepository: CategoriesRepository,
     private val preferences: SharedPreferences
 ) :
     ViewModel() {
@@ -34,14 +35,36 @@ class SearchViewModel @Inject constructor(
     var isLoading by mutableStateOf(true)
     var isSuccessful by mutableStateOf(false)
 
+    private val _categoriesData = MutableStateFlow(Resource<List<Category>>())
+    val categoriesData: StateFlow<Resource<List<Category>>> = _categoriesData
+    var isCategoriesLoading by mutableStateOf(true)
+    var isCategoriesSuccessful by mutableStateOf(false)
+
     var isAddingFavorite by mutableStateOf(false)
     var addedSuccessfuly by mutableStateOf(false)
     var isRemovingFavorite by mutableStateOf(false)
     var removedSuccessfuly by mutableStateOf(false)
 
+    fun getAllCategories() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (!isCategoriesLoading) {
+                isCategoriesLoading = true
+            }
+
+            _categoriesData.value =
+                categoriesRepository.getAll()
+
+            val statusCode = _categoriesData.value.statusCode
+
+            isCategoriesSuccessful = statusCode == 200 || statusCode == 201
+
+            isCategoriesLoading = false
+        }
+    }
+
     fun search(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if(!isLoading) {
+            if (!isLoading) {
                 isLoading = true
             }
 

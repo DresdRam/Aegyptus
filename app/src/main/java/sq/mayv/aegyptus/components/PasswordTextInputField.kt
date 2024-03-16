@@ -77,7 +77,7 @@ fun PasswordTextInputField(
                         targetState = passwordVisible,
                         label = "",
                         contentAlignment = Alignment.Center
-                        ) {
+                    ) {
 
                         Icon(
                             painter = painterResource(
@@ -98,7 +98,7 @@ fun PasswordTextInputField(
             singleLine = true,
             textStyle = TextStyle(
                 fontFamily = if (!passwordVisible) FontFamily(Font(R.font.yiroglyphics)) else FontFamily.Default,
-                fontSize = if(!passwordVisible) 20.sp else TextUnit.Unspecified
+                fontSize = if (!passwordVisible) 20.sp else TextUnit.Unspecified
             )
         )
 

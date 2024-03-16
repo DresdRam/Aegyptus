@@ -1,11 +1,11 @@
-package sq.mayv.aegyptus.ui.screens.home.components
+package sq.mayv.aegyptus.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,15 +15,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
-import sq.mayv.aegyptus.components.LottieAnimationView
 
 @Composable
-fun HomeErrorView() {
+fun OutlinedMessageView(
+    message: String,
+    outline: BorderStroke = BorderStroke(1.dp, colorResource(id = R.color.primary)),
+    textColor: Color = colorResource(id = R.color.primary),
+    buttonEnabled: Boolean = false,
+    buttonMessage: String = "",
+    onButtonClick: () -> Unit = { }
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -34,33 +41,39 @@ fun HomeErrorView() {
                 .width(300.dp)
                 .wrapContentHeight(),
             shape = RoundedCornerShape(10.dp),
-            contentColor = Color.White,
-            elevation = 15.dp
+            border = outline,
+            contentColor = Color.White
         ) {
 
             Column(
                 modifier = Modifier
                     .padding(vertical = 20.dp)
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
-
-                LottieAnimationView(
-                    modifier = Modifier.size(200.dp),
-                    lottie = R.raw.mummy,
-                    iterateForEver = false
-                )
 
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp),
-                    text = "Failed to load data",
+                    text = message,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = Color.Red
+                    color = textColor
                 )
+
+                if (buttonEnabled) {
+                    RoundedButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 25.dp),
+                        text = buttonMessage,
+                        onClicked = onButtonClick,
+                        fontSize = 16
+                    )
+                }
             }
         }
     }

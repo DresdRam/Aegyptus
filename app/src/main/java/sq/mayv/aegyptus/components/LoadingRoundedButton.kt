@@ -35,13 +35,12 @@ fun LoadingRoundedButton(
         onClick = { onClicked() }
     ) {
 
-        if(isLoading) {
+        if (isLoading) {
             LottieAnimationView(
                 modifier = Modifier.size(40.dp),
                 lottie = lottie
             )
-        }
-        else {
+        } else {
             Text(
                 text = text,
                 fontSize = fontSize.sp

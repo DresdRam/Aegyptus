@@ -1,11 +1,10 @@
-package sq.mayv.aegyptus.ui.screens.search.components
+package sq.mayv.aegyptus.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,10 +20,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import sq.mayv.aegyptus.R
-import sq.mayv.aegyptus.components.LottieAnimationView
 
 @Composable
-fun SearchEmptyView() {
+fun MessageView(
+    message: String,
+    buttonEnabled: Boolean = false,
+    buttonMessage: String = "",
+    onButtonClick: () -> Unit = { }
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -43,19 +46,29 @@ fun SearchEmptyView() {
                 modifier = Modifier
                     .padding(vertical = 20.dp)
                     .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
 
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp),
-                    text = "There is no result for this search query.",
+                    text = message,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
                     color = colorResource(id = R.color.primary)
                 )
+
+                if (buttonEnabled) {
+                    RoundedButton(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 25.dp),
+                        text = buttonMessage,
+                        onClicked = onButtonClick,
+                        fontSize = 16
+                    )
+                }
             }
         }
     }
