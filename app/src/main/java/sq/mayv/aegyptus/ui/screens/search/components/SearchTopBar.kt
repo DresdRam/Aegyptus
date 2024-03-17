@@ -1,5 +1,6 @@
 package sq.mayv.aegyptus.ui.screens.search.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,7 @@ fun SearchTopBar(
             modifier = Modifier
                 .padding(end = 20.dp)
                 .fillMaxWidth()
-                .height(70.dp),
+                .height(80.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -91,6 +92,7 @@ fun SearchTopBar(
 
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
             contentPadding = PaddingValues(horizontal = 15.dp)
         ) {
             items(items = categoriesList, key = { it.id }) {
