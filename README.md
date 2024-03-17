@@ -52,23 +52,26 @@ Contributions to EgyptExplorer are welcome! If you encounter any bugs, have feat
 <img src="./screenshots/intro.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (2).gif" align="center" width="32%"/>
+<img src="./screenshots/signup_intro.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (3).gif" align="center" width="32%"/>
+<img src="./screenshots/signup_outro.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (4).gif" align="center" width="32%"/>
+<img src="./screenshots/home_no_nearby.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (5).gif" align="center" width="32%"/>
+<img src="./screenshots/home_nearby.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (6).gif" align="center" width="32%"/>
+<img src="./screenshots/permissions.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (7).gif" align="center" width="32%"/>
+<img src="./screenshots/place.gif" align="center" width="32%"/>
 </div>
 <div align="center">
-<img src="/./Screenshots/ (8).gif" align="center" width="32%"/>
+<img src="./screenshots/map.gif" align="center" width="32%"/>
+</div>
+<div align="center">
+<img src="./screenshots/favorites.gif" align="center" width="32%"/>
 </div>
