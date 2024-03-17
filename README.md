@@ -47,10 +47,9 @@ git clone https://github.com/dresdram/Aegyptus.git
 
 Contributions to EgyptExplorer are welcome! If you encounter any bugs, have feature requests, or would like to contribute enhancements, please feel free to open an issue or submit a pull request.
 
-## Screenshots
-
+## ScreenshotsT
 <div align="center">
-<img src="/./Screenshots/ (1).gif" align="center" width="32%"/>
+<img src="./Screenshots/intro.gif" align="center" width="32%"/>
 </div>
 <div align="center">
 <img src="/./Screenshots/ (2).gif" align="center" width="32%"/>
